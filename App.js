@@ -1,4 +1,6 @@
 // https://medium.com/@rl.myrie2/learn-react-native-with-me-building-a-simple-calculator-app-21b65fcf4d9b
+// https://reactnative.dev/docs/button
+// https://reactnative.dev/docs/textinput
 
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
@@ -8,7 +10,6 @@ export default function App() {
 
   const [number1, setNumber1] = useState('');
   const [number2, setNumber2] = useState('');
-  
 
   const [result, setResult] = useState('');
 
@@ -17,9 +18,20 @@ export default function App() {
     <View style={styles.container}>
       <View style={styles.content}>
         <Text>Result: {result}</Text>
-        <TextInput style={styles.input} name="number1" inputMode='numeric' value={number1} onChangeText={(e) => setNumber1(e)} />
-        <TextInput style={styles.input} name="number2" inputMode='numeric' value={number2} onChangeText={(e) => setNumber2(e)} />
-
+        <TextInput
+          style={styles.input}
+          name="number1"
+          inputMode='numeric'
+          value={number1}
+          onChangeText={(e) => setNumber1(e)}
+        />
+        <TextInput
+          style={styles.input}
+          name="number2"
+          inputMode='numeric'
+          value={number2}
+          onChangeText={(e) => setNumber2(e)}
+        />
         <View style={styles.operators}>
           <Button
             title="+"
@@ -33,7 +45,6 @@ export default function App() {
               setResult(Number(number1) - Number(number2));
             }}
           />
-
         </View>
         <StatusBar style="auto" />
       </View>
