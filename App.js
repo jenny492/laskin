@@ -5,83 +5,89 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function App() {
 
   const [number1, setNumber1] = useState('');
   const [number2, setNumber2] = useState('');
 
+  const [calculations, setCalculations] = useState([]);
+
   const [result, setResult] = useState('');
 
   const calculate = (operation) => {
+    let newResult;
+    let calcText;
     if (operation === '+') {
-      setResult(Number(number1) + Number(number2))
+      newResult = Number(number1) + Number(number2);
+      calcText = number1 + ' + ' + number2 + ' = ' + newResult;
     } else {
-      setResult(Number(number1) - Number(number2));
+      newResult = Number(number1) - Number(number2);
+      calcText = number1 + ' - ' + number2 + ' = ' + newResult;
     }
+    setResult(newResult);
+    setCalculations([...calculations, calcText]);
   }
 
-    return (
-
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <Text>Result: {result}</Text>
-          <TextInput
-            style={styles.input}
-            name="number1"
-            inputMode='numeric'
-            value={number1}
-            onChangeText={(e) => setNumber1(e)}
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <Text>Result: {result}</Text>
+        <TextInput
+          style={styles.input}
+          name="number1"
+          inputMode='numeric'
+          value={number1}
+          onChangeText={(e) => setNumber1(e)}
+        />
+        <TextInput
+          style={styles.input}
+          name="number2"
+          inputMode='numeric'
+          value={number2}
+          onChangeText={(e) => setNumber2(e)}
+        />
+        <View style={styles.operators}>
+          <Button
+            title="+"
+            onPress={() => calculate('+')}
           />
-          <TextInput
-            style={styles.input}
-            name="number2"
-            inputMode='numeric'
-            value={number2}
-            onChangeText={(e) => setNumber2(e)}
+          <Button
+            title=" -"
+            onPress={() => calculate('-')}
           />
-          <View style={styles.operators}>
-            <Button
-              title="+"
-              onPress={() => calculate('+')}
-            />
-            <Button
-              title=" -"
-              onPress={() => calculate('-')}
-            />
-          </View>
-          <View>
-            
-          </View>
-          <StatusBar style="auto" />
         </View>
-      </View>
+        <View>
+          <FlatList
+            data={calculations}
+            renderItem={({ item }) => <Text>{item}</Text>}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+        <StatusBar style="auto" />
+      </SafeAreaView>
+    </SafeAreaProvider>
+  );
+}
 
-    );
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    paddingTop: 20,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    width: '50%',
+  },
+  operators: {
+    flexDirection: 'row',
+    width: '20%',
+    marginTop: 20,
+    justifyContent: 'space-between',
   }
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    content: {
-      width: '100%',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    input: {
-      height: 40,
-      borderColor: 'gray',
-      borderWidth: 1,
-      width: '50%',
-    },
-    operators: {
-      flexDirection: 'row',
-      width: '20%',
-      marginTop: 20,
-      justifyContent: 'space-between',
-    }
-  });
+});
