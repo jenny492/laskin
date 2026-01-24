@@ -19,6 +19,9 @@ export default function App() {
   const calculate = (operation) => {
     let newResult;
     let calcText;
+    if (!number1 || !number2) {
+      return;
+    }
     if (operation === '+') {
       newResult = Number(number1) + Number(number2);
       calcText = number1 + ' + ' + number2 + ' = ' + newResult;
@@ -28,12 +31,14 @@ export default function App() {
     }
     setResult(newResult);
     setCalculations([...calculations, calcText]);
+    setNumber1('');
+    setNumber2('');
   }
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <Text>Result: {result}</Text>
+        <Text style={styles.text}>Result: {result}</Text>
         <TextInput
           style={styles.input}
           name="number1"
@@ -58,10 +63,11 @@ export default function App() {
             onPress={() => calculate('-')}
           />
         </View>
-        <View>
+        <View style={styles.history}>
+          <Text style={styles.text}>History</Text>
           <FlatList
             data={calculations}
-            renderItem={({ item }) => <Text>{item}</Text>}
+            renderItem={({ item }) => <Text style={styles.text}>{item}</Text>}
             keyExtractor={(item, index) => index.toString()}
           />
         </View>
@@ -89,5 +95,14 @@ const styles = StyleSheet.create({
     width: '20%',
     marginTop: 20,
     justifyContent: 'space-between',
-  }
+  },
+  history: {
+    marginTop: 100,
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 16,
+    marginVertical: 2,
+    textAlign: 'center',
+  },
 });
