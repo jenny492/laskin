@@ -1,108 +1,17 @@
-// https://medium.com/@rl.myrie2/learn-react-native-with-me-building-a-simple-calculator-app-21b65fcf4d9b
-// https://reactnative.dev/docs/button
-// https://reactnative.dev/docs/textinput
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Calculator from './Calculator';
+import History from './History';
 
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
-import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-
-  const [number1, setNumber1] = useState('');
-  const [number2, setNumber2] = useState('');
-
-  const [calculations, setCalculations] = useState([]);
-
-  const [result, setResult] = useState('');
-
-  const calculate = (operation) => {
-    let newResult;
-    let calcText;
-    if (!number1 || !number2) {
-      return;
-    }
-    if (operation === '+') {
-      newResult = Number(number1) + Number(number2);
-      calcText = number1 + ' + ' + number2 + ' = ' + newResult;
-    } else {
-      newResult = Number(number1) - Number(number2);
-      calcText = number1 + ' - ' + number2 + ' = ' + newResult;
-    }
-    setResult(newResult);
-    setCalculations([...calculations, calcText]);
-    setNumber1('');
-    setNumber2('');
-  }
-
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.text}>Result: {result}</Text>
-        <TextInput
-          style={styles.input}
-          name="number1"
-          inputMode='numeric'
-          value={number1}
-          onChangeText={(e) => setNumber1(e)}
-        />
-        <TextInput
-          style={styles.input}
-          name="number2"
-          inputMode='numeric'
-          value={number2}
-          onChangeText={(e) => setNumber2(e)}
-        />
-        <View style={styles.operators}>
-          <Button
-            title="+"
-            onPress={() => calculate('+')}
-          />
-          <Button
-            title=" -"
-            onPress={() => calculate('-')}
-          />
-        </View>
-        <View style={styles.history}>
-          <Text style={styles.text}>History</Text>
-          <FlatList
-            data={calculations}
-            renderItem={({ item }) => <Text style={styles.text}>{item}</Text>}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
-        <StatusBar style="auto" />
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Calculator" component={Calculator} />
+        <Stack.Screen name="History" component={History} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    paddingTop: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    width: '50%',
-  },
-  operators: {
-    flexDirection: 'row',
-    width: '20%',
-    marginTop: 20,
-    justifyContent: 'space-between',
-  },
-  history: {
-    marginTop: 100,
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 16,
-    marginVertical: 2,
-    textAlign: 'center',
-  },
-});
